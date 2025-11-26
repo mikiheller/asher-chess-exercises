@@ -11,7 +11,6 @@ let isShowingHint = false;
 // DOM Elements
 const chessboard = document.getElementById('chessboard');
 const answerInput = document.getElementById('answerInput');
-const submitBtn = document.getElementById('submitBtn');
 const feedback = document.getElementById('feedback');
 const scoreDisplay = document.getElementById('scoreDisplay');
 const streakDisplay = document.getElementById('streakDisplay');
@@ -200,8 +199,6 @@ function clearArrows() {
 
 // Event listeners
 function setupEventListeners() {
-    submitBtn.addEventListener('click', checkAnswer);
-    
     answerInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             checkAnswer();
