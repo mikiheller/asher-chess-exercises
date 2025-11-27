@@ -6,7 +6,11 @@ const ranks = ['8', '7', '6', '5', '4', '3', '2', '1']; // Display from top to b
 let currentSquare = null;
 let score = 0;
 let streak = 0;
+let bestStreak = 0;
 let isShowingHint = false;
+
+// LocalStorage key for this game
+const BEST_STREAK_KEY = 'nameSquares_bestStreak';
 
 // DOM Elements
 const chessboard = document.getElementById('chessboard');
@@ -14,13 +18,29 @@ const answerInput = document.getElementById('answerInput');
 const feedback = document.getElementById('feedback');
 const scoreDisplay = document.getElementById('scoreDisplay');
 const streakDisplay = document.getElementById('streakDisplay');
+const bestStreakDisplay = document.getElementById('bestStreakDisplay');
 const arrowOverlay = document.getElementById('arrowOverlay');
 
 // Initialize the game
 function init() {
+    loadBestStreak();
     createBoard();
     selectRandomSquare();
     setupEventListeners();
+}
+
+// Load best streak from localStorage
+function loadBestStreak() {
+    const saved = localStorage.getItem(BEST_STREAK_KEY);
+    if (saved) {
+        bestStreak = parseInt(saved, 10);
+        bestStreakDisplay.textContent = bestStreak;
+    }
+}
+
+// Save best streak to localStorage
+function saveBestStreak() {
+    localStorage.setItem(BEST_STREAK_KEY, bestStreak.toString());
 }
 
 // Create the chessboard
@@ -143,6 +163,13 @@ function showFeedback(isCorrect) {
 function updateScore() {
     scoreDisplay.textContent = score;
     streakDisplay.textContent = streak;
+    
+    // Update best streak if current streak is higher
+    if (streak > bestStreak) {
+        bestStreak = streak;
+        bestStreakDisplay.textContent = bestStreak;
+        saveBestStreak();
+    }
 }
 
 // Show hint arrows pointing to the file and rank labels

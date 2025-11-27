@@ -19,19 +19,39 @@ let currentPuzzle = null;
 let selectedPiece = null;
 let score = 0;
 let streak = 0;
+let bestStreak = 0;
 let isShowingHint = false;
+
+// LocalStorage key for this game
+const BEST_STREAK_KEY = 'captureGame_bestStreak';
 
 // DOM Elements
 const chessboard = document.getElementById('chessboard');
 const feedback = document.getElementById('feedback');
 const scoreDisplay = document.getElementById('scoreDisplay');
 const streakDisplay = document.getElementById('streakDisplay');
+const bestStreakDisplay = document.getElementById('bestStreakDisplay');
 const arrowOverlay = document.getElementById('arrowOverlay');
 
 // Initialize the game
 function init() {
+    loadBestStreak();
     createBoard();
     generatePuzzle();
+}
+
+// Load best streak from localStorage
+function loadBestStreak() {
+    const saved = localStorage.getItem(BEST_STREAK_KEY);
+    if (saved) {
+        bestStreak = parseInt(saved, 10);
+        bestStreakDisplay.textContent = bestStreak;
+    }
+}
+
+// Save best streak to localStorage
+function saveBestStreak() {
+    localStorage.setItem(BEST_STREAK_KEY, bestStreak.toString());
 }
 
 // Create the chessboard
@@ -339,6 +359,13 @@ function showError() {
 function updateScore() {
     scoreDisplay.textContent = score;
     streakDisplay.textContent = streak;
+    
+    // Update best streak if current streak is higher
+    if (streak > bestStreak) {
+        bestStreak = streak;
+        bestStreakDisplay.textContent = bestStreak;
+        saveBestStreak();
+    }
 }
 
 // Show movement hint arrows
